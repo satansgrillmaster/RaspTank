@@ -1,6 +1,11 @@
 import socket
 import json
+import time
+
 import keyboard
+
+SERVO_1_EVENTS = ['3', '4']
+SERVO_2_EVENTS = ['1', '2']
 
 class Server:
     def __init__(self, host='0.0.0.0', port=5000):
@@ -30,11 +35,24 @@ if __name__ == '__main__':
     server = Server()
     server.start()
 
+    used_events = []
+
     def send_keypress(event):
-        if event.name in ['w', 'a', 's', 'd']:
-            server.send_data({'key': event.name})
+        if event.name in ['w', 'a', 's', 'd', '1', '2', '3', '4']:
+            if event.name not in used_events:
+
+                if event.name in SERVO_1_EVENTS:
+                    for servo_event in SERVO_1_EVENTS:
+                        used_events.append(servo_event)
+                elif event.name in SERVO_2_EVENTS:
+                    for servo_event in SERVO_2_EVENTS:
+                        used_events.append(servo_event)
+
+                server.send_data({'key': event.name, 'is_first_step': True})
+            else:
+                server.send_data({'key': event.name, 'is_first_step': False})
+
 
     keyboard.on_press(send_keypress)
-
     while True:
         pass
