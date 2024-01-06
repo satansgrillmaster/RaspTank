@@ -3,7 +3,7 @@ import json
 import keyboard
 
 class Server:
-    def __init__(self, host='localhost', port=5000):
+    def __init__(self, host='0.0.0.0', port=5000):
         self.host = host
         self.port = port
         self.server = None
