@@ -1,6 +1,6 @@
 import socket
 import json
-from RaspTankCode import LEDapp
+from server import LEDapp
 
 
 class Client:
