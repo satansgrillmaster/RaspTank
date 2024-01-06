@@ -50,8 +50,10 @@ class Client:
         servo_actions = {
             '1': {'chanel': SERVO_2, 'initial': 250, 'min': 90, 'final': 500, 'step': 5},
             '2': {'chanel': SERVO_2, 'initial': 250, 'min': 90, 'final': 500, 'step': -5},
-            '3': {'chanel': SERVO_1, 'initial': 250, 'min': 90, 'final': 500, 'step': 5},
-            '4': {'chanel': SERVO_1, 'initial': 250, 'min': 90, 'final': 500, 'step': -5},
+            '4': {'chanel': SERVO_1, 'initial': 250, 'min': 90, 'final': 500, 'step': 5},
+            '5': {'chanel': SERVO_1, 'initial': 250, 'min': 90, 'final': 500, 'step': -5},
+            '3': {'chanel': SERVO_0, 'initial': 400, 'min': 90, 'final': 500, 'step': -5},
+            '6': {'chanel': SERVO_0, 'initial': 400, 'min': 90, 'final': 500, 'step': -5},
         }
 
         key = data.get('key')
