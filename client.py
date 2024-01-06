@@ -20,13 +20,14 @@ class Client:
 
     def process_data(self, data, led):
         actions = {
-            'w': led.colorWipe(0, 255, 0),
-            'a': led.colorWipe(255, 0, 0),
-            's': led.colorWipe(0, 0, 255),
-            'd': led.colorWipe(255, 255, 255),
+            'w': (0, 255, 0),
+            'a': (255, 0, 0),
+            's': (0, 0, 255),
+            'd': (255, 255, 255),
         }
         key = data.get('key')
-        print(actions.get(key, 'Unknown command'))
+        colors = actions.get(key, 'Unknown command')
+        led.colorWipe(*colors)
 
 
     def stop(self):
