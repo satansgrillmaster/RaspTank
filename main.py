@@ -1,6 +1,7 @@
 import socket
 import json
 import time
+import msvcrt
 
 import keyboard
 
@@ -30,7 +31,9 @@ class Server:
         self.conn.close()
         self.server.close()
 
-
+def clear_keyboard_buffer():
+    while msvcrt.kbhit():
+        msvcrt.getch()
 
 if __name__ == '__main__':
     server = Server()
@@ -53,9 +56,10 @@ if __name__ == '__main__':
                         used_events.append(servo_event)
 
                 server.send_data({'key': event.name, 'is_first_step': True})
+                clear_keyboard_buffer()  # Clear the keyboard buffer after sleep
             else:
                 server.send_data({'key': event.name, 'is_first_step': False})
-
+                clear_keyboard_buffer()  # Clear the keyboard buffer after sleep
 
     keyboard.on_press(send_keypress)
     while True:

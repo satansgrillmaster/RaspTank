@@ -52,8 +52,8 @@ class Client:
             '2': {'chanel': SERVO_2, 'initial': 250, 'min': 90, 'final': 500, 'step': -5},
             '4': {'chanel': SERVO_1, 'initial': 250, 'min': 90, 'final': 500, 'step': 5},
             '5': {'chanel': SERVO_1, 'initial': 250, 'min': 90, 'final': 500, 'step': -5},
-            '3': {'chanel': SERVO_0, 'initial': 400, 'min': 90, 'final': 500, 'step': -5},
-            '6': {'chanel': SERVO_0, 'initial': 400, 'min': 90, 'final': 500, 'step': -5},
+            '3': {'chanel': SERVO_0, 'initial': 300, 'min': 90, 'final': 400, 'step': 5},
+            '6': {'chanel': SERVO_0, 'initial': 300, 'min': 90, 'final': 400, 'step': -5},
         }
 
         key = data.get('key')
@@ -106,15 +106,7 @@ class Client:
                 self.servo_3_rotation += step
                 rotation = self.servo_3_rotation
 
-        if rotation < min:
-            rotation = initial
-            servo.pwm.set_pwm(chanel, 0, rotation)
-
-        elif rotation > final:
-            rotation = initial
-            servo.pwm.set_pwm(chanel, 0, rotation)
-
-        else:
+        if min + step < rotation < final + step:
             rotation += step
             servo.pwm.set_pwm(chanel, 0, rotation)
 
