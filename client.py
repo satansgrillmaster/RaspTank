@@ -1,6 +1,8 @@
 import socket
 import json
-import LEDapp, servo
+import time
+
+import LEDapp, servo, move
 
 SERVO_0 = 12
 SERVO_1 = 13
@@ -15,6 +17,7 @@ class Client:
         self.port = port
         self.client = None
 
+        move.setup()
         self.servo_0_rotation = 0
         self.is_first_step_servo_0 = True
 
@@ -36,16 +39,16 @@ class Client:
 
     def receive_data(self):
         data = self.client.recv(1024)
+        print(data)
         json_data = json.loads(data.decode('utf-8'))
         return json_data
 
     def process_data(self, data, led):
 
         actions = {
-            'w': (0, 255, 0),
-            'a': (255, 0, 0),
-            's': (0, 0, 255),
-            'd': (255, 255, 255),
+            '7': (0, 255, 0),
+            '8': (255, 0, 0),
+            '9': (0, 0, 255),
         }
         servo_actions = {
             '1': {'chanel': SERVO_2, 'initial': 250, 'min': 90, 'final': 500, 'step': 5},
@@ -54,6 +57,11 @@ class Client:
             '5': {'chanel': SERVO_1, 'initial': 250, 'min': 90, 'final': 500, 'step': -5},
             '3': {'chanel': SERVO_0, 'initial': 300, 'min': 90, 'final': 400, 'step': 5},
             '6': {'chanel': SERVO_0, 'initial': 300, 'min': 90, 'final': 400, 'step': -5},
+        }
+        move_actions = {
+            'w': 'forward',
+            's': 'backward',
+            'p': 'stop'
         }
 
         key = data.get('key')
@@ -65,6 +73,13 @@ class Client:
         elif key in servo_actions:
             _servo = servo_actions.get(key)
             self.move_servo(_servo, is_first_step)
+        elif key in move_actions:
+            move_direction = move_actions.get(key)
+            if move_direction == 'stop':
+                move.motorStop()
+            move.move(30, move_direction,'no', 0.8)
+            time.sleep(1)
+            move.motorStop()
 
     def stop(self):
         self.client.close()
