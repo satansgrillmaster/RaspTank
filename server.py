@@ -3,6 +3,7 @@ import threading
 import time
 import LEDapp
 import ServoManager
+from picamera import PiCamera
 
 
 class Server:
@@ -16,7 +17,7 @@ class Server:
 
     def handle_client(self, conn):
         while True:
-            data = conn.recv(1024)
+            data = conn.recv(4096)
             if not data:
                 break
             self.handle_data(data)
@@ -26,12 +27,16 @@ class Server:
         message = data.decode('utf-8')
         splitted_message = message.split('_')
 
-
         if message == 'action1':
             self.perform_action1()
 
         elif message == 'action2':
             self.perform_action2()
+
+        elif message == 'camera':
+            camera = PiCamera()
+            camera.capture('./screenshot.jpg')
+            camera.close()
 
         elif splitted_message[0] in self.servo_manager.servo_actions:
             servo = self.servo_manager.servo_actions.get(splitted_message[0])
@@ -49,6 +54,7 @@ class Server:
 
     def start(self):
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.server.bind((self.host, self.port))
         self.server.listen(1)
         print(f"Server started at {self.host}:{self.port}")
