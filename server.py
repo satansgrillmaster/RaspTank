@@ -8,19 +8,24 @@ class Server:
         self.host = host
         self.port = port
         self.server = None
-        self.stop_server = False  # Definieren Sie stop_server als Attribut der Klasse
+        self.stop_server = False
 
     def start(self):
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.bind((self.host, self.port))
         self.server.listen(1)
         print(f"Server started at {self.host}:{self.port}")
-        timer = threading.Timer(5, self.stop_server_definitive)  # Keine Notwendigkeit, stop_server hier zu übergeben
+        timer = threading.Timer(120, self.stop_server_definitive)  # Keine Notwendigkeit, stop_server hier zu übergeben
         timer.start()
         while True:
             try:
                 conn, addr = self.server.accept()
                 print(f"Connection received from {addr}")
+                while True:
+                    data = conn.recv(1024)
+                    if not data:
+                        break
+                    print(f"Received data: {data.decode('utf-8')}")
                 conn.close()
             except Exception as e:
                 print(f"Error: {e}")
